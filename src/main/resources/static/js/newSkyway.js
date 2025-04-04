@@ -105,6 +105,11 @@ const token = new SkyWayAuthToken({
 		const currentVideo = await me.publish(video);
 		const currentAudio = await me.publish(audio);
 		const localStream = localVideo.srcObject;
+		const audioElm = document.createElement("audio");
+		audio.attach(audioElm);
+		await audioElm.play();
+		// observeMic(audio);
+		startVoiceActivity(audio);
 		
 		// remoteメディア用HTML生成
 		const subscribeAndAttach = async (publication) => {

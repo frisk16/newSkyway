@@ -1,27 +1,30 @@
 
-const startVoiceActivity = (stream) => {
-	let audioContext;
-	let mediaStreamSource;
-	let meter;
-	
+let audioContext;
+let mediaStreamSource;
+let meter;
+let micStream
+
+const startVoiceActivity = (audio) => {
+	micStream = new MediaStream();
+	micStream.addTrack(audio.track);
 	audioContext = new (window.AudioContext || window.webkitAudioContext)();
 	
-	mediaStreamSource = audioContext.createMediaStreamSource(stream);
+	mediaStreamSource = audioContext.createMediaStreamSource(micStream);
 	meter = createAudioMeter(audioContext);
 	mediaStreamSource.connect(meter);
 };
 
 // メーターの生成
-function createAudioMeter(audioContext, clipLevel, averaging, clipLag) {
+function createAudioMeter(audioContext) {
   // メーターの生成
   const processor = audioContext.createScriptProcessor(512)
   processor.onaudioprocess = volumeAudioProcess
   processor.clipping = false
   processor.lastClip = 0
   processor.volume = 0
-  processor.clipLevel = clipLevel || 0.98
-  processor.averaging = averaging || 0.95
-  processor.clipLag = clipLag || 750
+  processor.clipLevel = 0.98
+  processor.averaging = 0.95
+  processor.clipLag = 750
   processor.connect(audioContext.destination)
 
   // クリップチェック時に呼ばれる
@@ -64,5 +67,7 @@ function volumeAudioProcess(event) {
   this.volume = Math.max(rms, this.volume * this.averaging)
  
   // ボリュームの表示
-  console.log(this.volume.toFixed(4));
+  if(this.volume.toFixed(4) > 0.01) {
+	  console.log(this.volume.toFixed(4));	
+  }
 }
