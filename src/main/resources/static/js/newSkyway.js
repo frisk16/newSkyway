@@ -299,6 +299,7 @@ const token = new SkyWayAuthToken({
 	};
 })();
 
+// DBへconnectionデータ送信
 const sendSkywayDetails = async (data) => {
 	const csrf = document.querySelector("meta[name^='_csrf']").content;
 	await fetch("http://localhost:8080/api/insertConnect", {
