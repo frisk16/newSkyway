@@ -3,6 +3,7 @@ let audioContext;
 let mediaStreamSource;
 let meter;
 let micStream
+const micVolumeIcon = document.getElementById("mic-volume-icon");
 
 const startVoiceActivity = (audio) => {
 	micStream = new MediaStream();
@@ -67,7 +68,12 @@ function volumeAudioProcess(event) {
   this.volume = Math.max(rms, this.volume * this.averaging)
  
   // ボリュームの表示
-  if(this.volume.toFixed(4) > 0.01) {
-	  console.log(this.volume.toFixed(4));	
+  let volume = this.volume.toFixed(4);
+  if(volume >= 0.04) {
+	micVolumeIcon.style.opacity = 1;	
+  } else if(volume > 0.02 && volume < 0.04) {
+	micVolumeIcon.style.opacity = 0.5;
+  } else {
+	micVolumeIcon.style.opacity = 0;	
   }
 }

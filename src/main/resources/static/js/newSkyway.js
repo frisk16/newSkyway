@@ -105,9 +105,7 @@ const token = new SkyWayAuthToken({
 		const currentVideo = await me.publish(video);
 		const currentAudio = await me.publish(audio);
 		const localStream = localVideo.srcObject;
-		const audioElm = document.createElement("audio");
-		audio.attach(audioElm);
-		await audioElm.play();
+		
 		// observeMic(audio);
 		startVoiceActivity(audio);
 		
@@ -266,6 +264,11 @@ const token = new SkyWayAuthToken({
 			}
 			data.audioFlg = !data.audioFlg;
 			await sendSkywayDetails(data);
+		});
+		
+		// ローカルマイク起動時
+		currentAudio.onEnabled.add(() => {
+			startVoiceActivity(currentAudio.stream);
 		});
 		
 		// 録画開始
